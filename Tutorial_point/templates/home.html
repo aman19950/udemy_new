@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load discount_calc %}
+{% block title %}
+    Home
+{% endblock title %}
+{% block content %}
+<div class = "container">
+    <div class="row my-3">
+    {% for course in course_info %}
+
+        <div class="card mx-3" style="width: 18rem;">
+            <img src="{{course.image.url}}" class="card-img-top" alt="..." height = 150>
+            <div class="card-body">
+                <h5 class="card-title">{{course.name}}</h5>
+                
+                <p class="card-title">{{course.desc}}</p>
+                <p class="card-text"> discount :{{course.discount}}%
+                <p class="card-title">
+                    <del>Rs.{{course.price}}</del></p>
+                <h3 class="card-title">Rs.{% price_discount course.price  course.discount %}</h3>
+
+        </div>
+        <div class="card-footer p-2 ">
+            <div class="col border-right d-md-flex justify-content-md-around gap-2">
+                 
+                        {% is_enroll request course  as  enrolled %}
+
+                        {% if enrolled %}
+                            <a href="course/{{course.slug}}" class="btn btn-primary btn-block">Start Course</a>
+
+                        {% elif request.session.email %}
+
+                        <a href="checkout/{{course.slug}}" class="btn btn-primary btn-block">Enroll Now</a>
+
+                        <a href="course/{{course.slug}}" class="btn btn-primary btn-block">More</a>
+
+                        {% else %}
+                        <a  class="btn btn-primary btn-block" data-bs-target = "#login" data-bs-toggle = "modal">Enroll Now</a>
+                        <a href="course/{{course.slug}}" class="btn btn-primary btn-block">More</a>
+                        {% endif %}
+             </div>                            
+        </div>
+        </div>
+    
+    {% endfor %}
+    </div>
+
+</div>
+
+{% endblock content %}

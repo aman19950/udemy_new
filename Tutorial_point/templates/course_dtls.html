@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load discount_calc %}
+{% block content %}
+
+    <div class="container my-3">
+        <div class="row border my-2" >
+            <div class="col my-3">
+                <ul class="list-group">
+                     {% is_enroll request course  as  enrolled %}
+                            {% for vid in co_dtls.video_set.all  %}
+
+                            
+                                <li class="list-group-item {% if vid == video %} active-video {% endif %}"aria-current="true">
+                                  <a href="?serial_no={{vid.s_no}}" class="{% if vid == video %} active-video-link {% endif %}{% if not enrolled and not vid.is_preview %}text-muted" style = "cursor: not-allowed; {% endif %}">{{vid}}</a>
+                                </li>
+                                                    
+                            {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="col-9">
+
+                
+
+                <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{video.video_id}}" title="Learn Python from basic | Learn Python from scratch |" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe >
+              
+
+            </div>
+        </div>
+        <div class="row border">
+            <div class="col">
+                <h1>
+                    Learning
+                </h1>
+                <ul>
+                    {% for i in co_dtls.learning_set.all  %}
+                <li> {{i.desc}}</li>
+                {% endfor %}
+                </ul>
+               
+            </div>
+              
+        </div>
+        <div class="row border ">
+        <div class="col">
+                <h1>Pre Requ</h1>
+           
+                <ul>
+                    {% for i in co_dtls.pre_req_set.all  %}
+                <li> {{i.desc}}</li>
+                {% endfor %}
+                </ul>
+               
+            
+        </div>
+        </div>
+
+
+
+    </div>
+
+{% endblock content %}

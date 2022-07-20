@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load discount_calc %}
+{% block content %}
+
+<div class="container my-3">
+
+    <div>
+       {% comment %} {% if order is not None %}
+       {{order}}
+       {% endif %} {% endcomment %}
+    </div>
+    <div class="row mx-auto">
+        <div class="col">
+            <div class="card mx-auto" style="width: 18rem;">
+                <img src=" {{course.image.url}}" class="card-img-top" alt="..." height=200>
+                <div class="card-body">
+
+                    <h5 class="card-title">{{course.name}}</h5>
+                    <p class="card-text">{{course.discount}}%
+                        <br>
+                        <del>  Rs.{{course.price}}</del>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class ="col">
+            <h1>You have to pay : {{course.name}}</h1>
+
+    
+            
+            <div>
+                <div class="col my-3">
+                    <h3>Apply Code: </h3>
+                    {% if coup %}
+                    <div class="alert alert-primary" role="alert">
+                           
+                            you got:  {{coup.discount}}%  discount
+                    </div>
+                    {% elif cpn_code_msg %}
+                    <div class="alert alert-primary" role="alert">
+                             {{cpn_code_msg}}
+                    </div>
+
+                    {% endif %}
+                    <form action="" method = "get">
+                        <input type="text" name="coupon" id="" placeholder = "enter your code">
+                        <input type="submit" class = "btn btn-primary"value ="apply">
+                    </form>
+                    {% if coup %}
+                
+                      <h3>Rs.{% price_discount course.price coup.discount %}</h3>
+            <a class="btn btn-success border" href="?action=create_payment&coupon={{coup.code}}">Continue to Payment</a> 
+            {% else %}
+             <h3>Rs.{% price_discount course.price course.discount %}</h3>
+            <a class="btn btn-success border" href="?action=create_payment">Continue to Payment</a> 
+             {% endif %}
+                </div>
+
+            </div>
+             
+            {% comment %} <button id="rzp-button1" class = "btn btn-success">Pay</button> {% endcomment %}
+        </div>
+
+        
+    </div>
+</div>
+
+
+{% if order_id is not None %}
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+var options = {
+    "key": "rzp_test_NEwAa8bvoxiG2T", // Enter the Key ID generated from the Dashboard
+    "amount": "{{amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Udemy Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": "{{order_id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "callback_url": "http://127.0.0.1:8000/verify_payment",
+    "prefill": {
+        "name": "{{user_id.first_name}}",
+        "email": "{{user_id.email}}",
+       
+    },
+    "notes": {
+        "address": "{{notes}}"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+
+rzp1.open();
+</script>
+{% endif %}
+
+
+
+{% endblock content %}
